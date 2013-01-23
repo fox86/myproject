@@ -1,11 +1,14 @@
 import java.util.Arrays;
 
+import util.Permute;
+
 /**
  * @author kchung
  */
 public class RankFind {
 	public static void main(String[] args) {
-		int[] a = {10, 8, 7, 4, 5, 3, 2, 1, 6, 9};
+		int[] a = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+		a = Permute.randomPermutation(a);
 		int n = 4;
 		int[] rank = rankFindSmallest(a, n);
 		System.out.println(Arrays.toString(rank));
@@ -27,10 +30,15 @@ public class RankFind {
 
 		} else{
 			int pivotIndex = choosePivot(a, start, end);
+			pivotIndex = partition(a, start, end, pivotIndex, n);
 
-			partition(a, start, end, pivotIndex, n);
-			modifiedQuickSort(a, start, pivotIndex - 1, n);
-			modifiedQuickSort(a, end, pivotIndex + 1, n);
+			if(pivotIndex == n){
+				//done
+			} else if(pivotIndex < n){ //do only one side
+				modifiedQuickSort(a, pivotIndex + 1, end, n);
+			} else if(pivotIndex > n){
+				modifiedQuickSort(a, start, pivotIndex - 1, n);
+			}
 		}
 	}
 
@@ -39,18 +47,14 @@ public class RankFind {
 		return (start + end) / 2;
 	}
 
-	private static void partition(int[] a, int start, int end, int pivotIndex, int n) {
+	//returns index of pivot
+	private static int partition(int[] a, int start, int end, int pivotIndex, int n) {
 		//swap pivot and end
 		swap(a, pivotIndex, end);
 
 		int firstHigh = start;
 		int pivot = a[end];
 		for (int i = start; i < end; i++){
-			//can stop now since we've ranked upto n
-			//just break since we need to swap pivot and first high b ack
-			if(firstHigh >= n){
-				break;
-			}
 			if (a[i] < pivot){
 				swap(a, firstHigh, i);
 				firstHigh++;
@@ -59,6 +63,7 @@ public class RankFind {
 
 		//swap firstHigh and end
 		swap(a, firstHigh, end);
+		return firstHigh;
 	}
 
 	/**
