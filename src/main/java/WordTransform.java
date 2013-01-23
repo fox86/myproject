@@ -61,6 +61,7 @@ public class WordTransform {
 	}
 
 	public static Collection<String> getOneEdit(String w, Set<String> dict, Set<String> used) {
+
 		Collection<String> list = new HashSet<String>();
 		for (int i = 0; i < w.length(); i++){
 			char[] word = w.toCharArray();
